@@ -1,14 +1,31 @@
-import { BoxGeometry, Mesh, MeshStandardMaterial, MathUtils } from 'three';
+import { BoxGeometry, Mesh, MeshStandardMaterial, MathUtils, TextureLoader } from 'three';
+
+const createMaterial = (): MeshStandardMaterial => {
+  // create a texture loader
+  const textureLoader = new TextureLoader();
+
+  // load a texture
+  const texture = textureLoader.load('/assets/textures/uv-test-bw.png')
+
+  // create a "standard" material using just loaded texture
+  const material = new MeshStandardMaterial({
+    map: texture,
+  });
+
+  return material;
+}
 
 const createCube = (): Mesh<any, MeshStandardMaterial> => {
   // create a geometry
   const geometry = new BoxGeometry(2, 2, 2);
 
   // create a default (white) Basic material
-  const material = new MeshStandardMaterial({ color: 'purple' });
+  // const material = new MeshStandardMaterial({ color: 'purple' });
+
+  const material = createMaterial();
 
   // create a Mesh containing the geometry and material
-  const cube = new Mesh(geometry, material);
+  const cube: Mesh<any, MeshStandardMaterial> & { tick?: (delta: number) => void } = new Mesh(geometry, material);
 
   cube.rotation.set(-0.5, -0.1, 0.8);
 
