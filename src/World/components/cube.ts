@@ -32,6 +32,16 @@ const createCube = (): Mesh<any, MeshStandardMaterial> => {
   // cube.rotation.y = MathUtils.degToRad(-45);
   // cube.rotation.z = MathUtils.degToRad(60);
 
+  const radiansPerSecond = MathUtils.degToRad(30);
+
+  // this method will be called once per frame
+  cube.tick = (delta) => {
+    // increase the cube's roation each frame
+    cube.rotation.z += radiansPerSecond * delta;
+    cube.rotation.x += radiansPerSecond * delta;
+    cube.rotation.y += radiansPerSecond * delta;
+  }
+
   return cube;
 }
 

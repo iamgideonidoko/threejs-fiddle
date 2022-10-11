@@ -1,7 +1,7 @@
 import type { PerspectiveCamera, WebGLRenderer } from 'three';
 
 class Resizer {
-  constructor(container: Element, camera: PerspectiveCamera, renderer: WebGLRenderer) {
+  public constructor(container: Element, camera: PerspectiveCamera, renderer: WebGLRenderer) {
     // set initial size on load
     this.setSize(container, camera, renderer);
 

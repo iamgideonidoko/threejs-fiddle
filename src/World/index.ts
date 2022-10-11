@@ -1,26 +1,30 @@
-import createCamera from './components/camera.js';
-import createCube from './components/cube.js';
-import createScene from './components/scene.js';
-import createLights from './components/lights.js';
-
-import createRenderer from './systems/renderer.js';
-import Resizer from './systems/Resizer.js';
 import type { PerspectiveCamera, WebGLRenderer, Scene } from 'three';
+import createCamera from './components/camera';
+import createCube from './components/cube';
+import createScene from './components/scene';
+import createLights from './components/lights';
+import createRenderer from './systems/renderer';
+import Resizer from './systems/Resizer';
+import Loop from './systems/Loop';
 
 class World {
   // These properties cannot be access outside this class
   private camera: PerspectiveCamera;
   private renderer: WebGLRenderer;
   private scene: Scene;
+  private loop: Loop;
 
-  constructor(container: Element) {
+  public constructor(container: Element) {
     this.camera = createCamera();
     this.scene = createScene();
     this.renderer = createRenderer();
+    this.loop = new Loop(this.camera, this.scene, this.renderer);
     container.append(this.renderer.domElement);
 
     const cube = createCube();
     const light = createLights();
+
+    this.loop.updatables.push(cube);
 
     this.scene.add(cube, light);
 
@@ -30,9 +34,17 @@ class World {
     }
   }
 
-  render() {
+  public render() {
     // draw a single frame
     this.renderer.render(this.scene, this.camera);
+  }
+
+  public start() {
+    this.loop.start();
+  }
+
+  public stop() {
+    this.loop.stop();
   }
 }
 
