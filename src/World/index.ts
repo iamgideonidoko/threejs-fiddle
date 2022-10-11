@@ -1,4 +1,3 @@
-import type { PerspectiveCamera, WebGLRenderer, Scene } from 'three';
 import createCamera from './components/camera';
 // import createCube from './components/cube';
 // import createMeshGroup from './components/meshGroup';
@@ -8,15 +7,17 @@ import createRenderer from './systems/renderer';
 import createControls from './systems/controls';
 import Resizer from './systems/Resizer';
 import Loop from './systems/Loop';
-import Train from './components/Train';
-import { createAxesHelper, createGridHelper } from './components/helpers';
+// import Train from './components/Train';
+// import { createAxesHelper, createGridHelper } from './components/helpers';
+import loadBirds from './components/birds';
 
 class World {
   // These properties cannot be access outside this class
-  private camera: PerspectiveCamera;
-  private renderer: WebGLRenderer;
-  private scene: Scene;
+  private camera: ReturnType<typeof createCamera>;
+  private renderer: ReturnType<typeof createRenderer>;
+  private scene: ReturnType<typeof createScene>;
   private loop: Loop;
+  private controls: ReturnType<typeof createControls>;
 
   public constructor(container: Element) {
     this.camera = createCamera();
@@ -25,31 +26,46 @@ class World {
     this.loop = new Loop(this.camera, this.scene, this.renderer);
     container.append(this.renderer.domElement);
 
-    const controls = createControls(this.camera, this.renderer.domElement);
+    this.controls = createControls(this.camera, this.renderer.domElement);
 
     const { ambientLight, mainLight } = createLights();
     
+    /* CUBE */
     // const cube = createCube();
- 
-    // this.loop.updatables.push(cube);
+    // this.loop.updatables.push(this.controls, cube);
 
-    // this.loop.updatables.push(controls);
-
+    /* MESH GROUP */
     // const meshGroup = createMeshGroup();
-    // this.loop.updatables.push(controls, meshGroup);
+    // this.loop.updatables.push(this.controls, meshGroup);
     // this.scene.add(ambientLight, mainLight, meshGroup);
 
-    const train = new Train();
-    this.loop.updatables.push(controls, train);
-    this.scene.add(ambientLight, mainLight, train);
+    /* TRAIN */
+    // const train = new Train();
+    // this.loop.updatables.push(this.controls, train);
+    // this.scene.add(ambientLight, mainLight, train);
+
+    /* BIRD (LOADED MODELS) */
+    this.loop.updatables.push(this.controls);
+    this.scene.add(ambientLight, mainLight);
 
     
     /* const resizer =  */new Resizer(container, this.camera, this.renderer);
+    /* WHEN THERE'S NO LOOP UPDATE */
     // resizer.onResize = () => {
     //   this.render();
     // }
 
-    this.scene.add(createAxesHelper(), createGridHelper());
+    /* FOR TRAIN */
+    // this.scene.add(createAxesHelper(), createGridHelper());
+  }
+
+  public async init () {
+    const { parrot, flamingo, stork } = await loadBirds();
+
+    // move the target to the center of the front bird
+    this.controls.target.copy(parrot.position);
+    this.loop.updatables.push(parrot, flamingo, stork);
+    this.scene.add(parrot, flamingo, stork);
   }
 
   public render() {

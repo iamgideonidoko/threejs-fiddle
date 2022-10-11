@@ -1,6 +1,6 @@
 import { MeshStandardMaterial } from 'three';
 
-function createMaterials(): { body: MeshStandardMaterial, detail: MeshStandardMaterial } {
+const createMaterials = (): { body: MeshStandardMaterial, detail: MeshStandardMaterial } => {
   const body = new MeshStandardMaterial({
     color: 'firebrick',
     flatShading: true,
