@@ -4,6 +4,7 @@ import createCube from './components/cube';
 import createScene from './components/scene';
 import createLights from './components/lights';
 import createRenderer from './systems/renderer';
+import createControls from './systems/controls';
 import Resizer from './systems/Resizer';
 import Loop from './systems/Loop';
 
@@ -21,10 +22,14 @@ class World {
     this.loop = new Loop(this.camera, this.scene, this.renderer);
     container.append(this.renderer.domElement);
 
+    const controls = createControls(this.camera, this.renderer.domElement);
+
     const cube = createCube();
     const light = createLights();
 
-    this.loop.updatables.push(cube);
+    this.loop.updatables.push(controls);
+
+    // this.loop.updatables.push(cube);
 
     this.scene.add(cube, light);
 
