@@ -11,6 +11,8 @@ const createControls = (camera: PerspectiveCamera, canvas: HTMLCanvasElement) =>
     // this.controls.autoRotate = true;
     controls.enableDamping = true;
 
+    controls.target.y = 1;
+
     controls.tick = () => controls.update();
 
     return controls;
