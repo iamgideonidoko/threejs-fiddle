@@ -1,4 +1,4 @@
-import { DirectionalLight, AmbientLight, HemisphereLight } from 'three';
+import { DirectionalLight, /* AmbientLight, */ HemisphereLight } from 'three';
 
 const createLights = (): { ambientLight: HemisphereLight; mainLight: DirectionalLight } => {
 
